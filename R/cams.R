@@ -8,13 +8,23 @@
 #' @param cam.sheet Name of worksheet within Google Sheet holding data (don't change this).
 #' @param cams.df Name of R data frame version of data.
 #' @param smooth Smoothing function for plots.
+#' @param free.scales Whether to allow the scales of faceted plots to be free.
+#' @param wrap.col Number of columns to wrap \code{facet_wrap} by.
+#' @param wrap.row Number of rows to wrap \code{facet_wrap} by.
+#' @param text.size Size of text in graphs in pts.
+#' @param exclude.outlier Excludes the Valley Giant 12 from smoothing. 
 #' @export
-cams <- function(id        = '',
-                 passwd    = '',
-                 cam.doc   = 'Cam Size Data',
-                 cam.sheet = 'Plain List (2015-12-19)',
-                 df        = cams.df,
-                 smooth    = 'loess',
+cams <- function(id          = '',
+                 passwd      = '',
+                 compare     = 'all',
+                 cam.doc     = 'Cam Size Data',
+                 cam.sheet   = 'Plain List (2015-12-19)',
+                 df          = cams.df,
+                 smooth      = 'loess',
+                 free.scales = 'free_y',
+                 wrap.col    = 6,
+                 text.size   = 16,
+                 exclude.outlier = FALSE,
                  ...){
     # Refresh data if id/password specified
     if(id != '' | passwd != ''){
@@ -35,17 +45,39 @@ cams <- function(id        = '',
                      manufacturer.model.size = paste(manufacturer, model, size, sep = " "))
         # Create factor out of size
         df$size <- factor(df$size,
-                          levels = c("000", "00", "0", "00/0", "0", "0/1",
-                                     "0.1", "0.2", "0.3", "1/3", "1/3 to 3/8",
-                                     "3/8", "3/8 to 1/2", "0.4", "0.5", "1/2",
-                                     "1/2 to 3/4", "0.6", "0.75", "3/4",
-                                     "3/4 to 7/8", "0.8", "4/5", "0.85",
-                                     "7/8", "7/8 to 1", "0.95", "1", "1.25",
-                                     "1.5", "1.75", "2", "2.5", "3", "3.5",
-                                     "4", "5", "6", "7", "8", "9", "Small",
-                                     "Medium", "Large"))
+                          levels = c("000", "00", "00/0", "0/1", "0",
+                                     "0.1", "0.2", "0.25", "0.3", "1/3", "3/8",
+                                     "0.4", "0.5", "1/2", "0.6", "2/3", "0.65",
+                                     "0.7", "0.75", "3/4", "0.8", "4/5", "0.85", "7/8",
+                                     "0.95", "1", "1.25", "1.5",
+                                     "1.75", "2", "2.5", "3", "3.5",
+                                     "4", "5", "6", "7", "8", "9", "12",
+                                     "Small", "Medium", "Large", 
+                                     "1/3 to 3/8",
+                                     "3/8 to 1/2",
+                                     "1/2 to 3/4",
+                                     "3/4 to 7/8", "3/4 to 1",
+                                     "7/8 to 1"))
+    }
+    # ToDo - Take list compare and filter()
+    if(compare != 'all'){
+        df <- filter_(df, )
     }
     results <- list()
+    results$df <- df
+    # Return summary data frame by manjfacturer/model
+    results$summary.df <- summary.df <- group_by(df,
+                                                 manufacturer.model) %>%
+                          summarise(n            = n(),
+                                    min.size     = min(lower),
+                                    max.size     = max(upper),
+                                    min.range    = min(range),
+                                    max.range    = max(range),
+                                    min.weight   = min(weight),
+                                    max.weight   = max(weight),
+                                    stem         = mean(stem),
+                                    axels        = mean(axels),
+                                    lobes        = mean(lobes))
     # Plot every cam
     results$all.range <- dplyr::select(df, manufacturer.model, size, manufacturer.model.size, lower, upper) %>%
                          melt(id.vars = c("manufacturer.model", "size", "manufacturer.model.size"))
@@ -62,11 +94,22 @@ cams <- function(id        = '',
                               size)) +
         geom_line(aes(colour = manufacturer.model)) +
         xlab("Range (mm)") +
-        ylab("Cam (Model / Size)") +
-        facet_grid(manufacturer.model ~ ., scales = "free_y") +
+        ylab("Cam (Size)") +
         theme(legend.position = "none",
               axis.text.y = element_text(size  = 8),
               strip.text.y = element_text(angle = 0))
+    if(free.scales == 'free_y'){
+        results$all.manufacturer <- results$all.manufacturer +
+                                    facet_grid(manufacturer.model ~ .,
+                                               scales = 'free_y')
+    }
+    else if(free.scales == 'free_x' | free.scales == 'free' ){
+        results$all.manufacturer <- results$all.manufacturer +
+                                    facet_wrap(facet  = "manufacturer.model",
+                                               scales = free.scales,
+                                               ncol   = wrap.col) +
+                                    theme(text = element_text(size = text.size))
+    }
     # Range covered by a manufacturers model
     results$model.range <- dplyr::select(df, manufacturer.model, lower, upper) %>%
                            group_by(manufacturer.model) %>%
@@ -93,10 +136,21 @@ cams <- function(id        = '',
                                      aes(range,
                                          strength.active.max)) +
         geom_point(aes(colour = factor(manufacturer.model))) +
-        geom_smooth(method = smooth, size = 1) + 
         xlab("Range (mm)") +
         ylab("Max Active Strength (kN)") +
         theme(legend.position = "none")
+    if(exclude.outlier == FALSE){
+        results$range.strength = results$range.strength +
+                                 geom_smooth(method = smooth, size = 1) 
+        
+    }
+    else if(exclude.outlier == TRUE){
+        results$range.strength <- results$range.strength +
+                                  geom_smooth(data = filter(df, size != "12") ,
+                                          aes(range,
+                                              strength.active.max),
+                                          method = smooth)
+    }
     # Strength v Weight
     results$range.weight <- ggplot(df,
                                    aes(range,
@@ -106,20 +160,5 @@ cams <- function(id        = '',
         xlab("Range (mm)") +
         ylab("Weight (g)") +
         theme(legend.position = "none")
-    # Return summary data frame by manjfacturer/model
-    results$summary.df <- summary.df <- group_by(df,
-                                                 manufacturer.model) %>%
-                          summarise(n            = n(),
-                                    min.size     = min(lower),
-                                    max.size     = max(upper),
-                                    min.range    = min(range),
-                                    max.range    = max(range),
-                                    min.weight   = min(weight),
-                                    max.weight   = max(weight),
-                                    stem         = mean(stem),
-                                    axels        = mean(axels),
-                                    lobes        = mean(lobes))
-    # Return results
-    results$df <- df
     return(results)
 }

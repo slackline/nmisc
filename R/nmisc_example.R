@@ -2,7 +2,7 @@
 #'
 #' @param example The Shiny example you wish to run (omit for a list of possible options).
 #' @export
-nmisc_example <- function(example) {
+nmisc_example <- function(example = 'cams') {
     # locate all the shiny app examples that exist
     valid_examples <- list.files(system.file("shiny", package = "nmisc"))
     valid_examples_msg <-
@@ -13,7 +13,7 @@ nmisc_example <- function(example) {
     # if an invalid example is given, throw an error
     if (missing(example) || !nzchar(example) ||
         !example %in% valid_examples){
-        stop('Please run `runExample()` with a valid example app as an argument.\n',
+        stop('Please run `nmisc_example()` with a valid example app as an argument.\n',
             valid_examples_msg,
             call. = FALSE)
     }

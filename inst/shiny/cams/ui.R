@@ -15,7 +15,7 @@ shinyUI(fluidPage(
                              choices  = c("All",
                                           dplyr::select(cams.df, manufacturer.model) %>% unique() %>% arrange(manufacturer.model)
                                           ),
-                             selected = 'All',
+                             ## selected = 'All',
                              multiple = TRUE
                              )
                  ),

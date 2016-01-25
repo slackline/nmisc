@@ -1,9 +1,9 @@
 shinyUI(fluidPage(
     titlePanel("Cam Comparison"),
     sidebarPanel(width = 4,
-                        p("Welcome, this website provides comparisons of different climbing cams.  Its a work in progress, so if you have any ideas please email the",
+                        p("Welcome, this website provides comparisons of different climbing cams.  Its a work in progress, if you have any ideas please email the",
                           HTML('<a href="mailto:sheffieldboulder.uk@gmail.com?subject=\'Cam site suggestions\'">author</a>'),
-                          " with your ideas")
+                          ".")
                  ),
     sidebarPanel(width = 4,
                  ## Get a list of cams to compare

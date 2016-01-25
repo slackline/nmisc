@@ -7,12 +7,27 @@ shinyUI(fluidPage(
                  ),
     sidebarPanel(width = 4,
                  ## Get a list of cams to compare
-                 compare.cams <- c("All",
-                                   dplyr::select(cams.df, model) %>% unique()
-                                   )
-                 selectInput('to.compare',
-                             'Choose cams to compare :',
-                             choices  = compare.cams,
+                 ## compare.cams <- c("All",
+                 ##                   dplyr::select(cams.df, model) %>% unique()
+                 ##                   ),
+                 selectInput(inputId  = 'to.compare',
+                             label    ='Choose cams to compare :',
+                             choices  = c("All",
+                                          dplyr::select(cams.df, manufacturer.model) %>% unique() %>% arrange(manufacturer.model)
+                                          ),
+                             selected = 'All',
+                             multiple = TRUE
+                             )
+                 ),
+    sidebarPanel(width = 4,
+                 ## Get a list of cams to compare
+                 ## compare.cams <- c("All",
+                 ##                   dplyr::select(cams.df, model) %>% unique()
+                 ##                   ),
+                 selectInput(inputId  = 'free_x',
+                             label    = 'Free x-axis :',
+                             choices  = c("Yes", "No"),
+                             selected = 'No',
                              multiple = TRUE
                              )
                  ),

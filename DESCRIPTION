@@ -1,0 +1,22 @@
+Package: nmisc
+Title: Miscelaneous helper functions of my own
+Version: 0.0.2.0000
+Authors@R: person("Neil", "Shephard", email = "nshephard@gmail.com", role = c("aut", "cre"))
+Description: Personal helper functions
+Depends:
+    R (>= 3.2.2),
+    devtools (>= 1.9.1),
+    dplyr (>= 0.4.1),
+    googlesheets (>= 0.1.0),
+    ggplot2 (>= 1.0.1),
+    ggvis (>= 0.4.2),
+    GGally (>= 0.5.0),
+    haven (>= 0.2.0),
+    lubridate (>= 1.5.0),
+    rsconnect (>= ),
+    shiny (>= 0.12.2),
+    stringr (>= 1.0.0),
+    tidyr (>= 0.3.1)
+License: GPL-2
+LazyData: true
+RoxygenNote: 5.0.1

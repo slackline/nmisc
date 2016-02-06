@@ -1,0 +1,8 @@
+# nmisc
+
+Personal R package with various functions I've written.
+
+- cams() - Plots data on climbing cams.
+- cd() - Wrapper for setwd() as I'm lazy.
+- pwd() - Wrapper for getwd() as I'm lazy.
+- mpg() - Summarises and plots my fuel consumption data.

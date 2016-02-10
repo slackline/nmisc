@@ -35,7 +35,7 @@ cams <- function(id          = '',
                          verbose = FALSE)
         # Read the data
         df <- gs_read(ss = cams,
-                           ws = cam.sheet)
+                      ws = cam.sheet)
         # Rename
         names(df) <- gsub("_", ".", names(df))
         # Generate unique ID
@@ -58,6 +58,21 @@ cams <- function(id          = '',
                                      "1/2 to 3/4",
                                      "3/4 to 7/8", "3/4 to 1",
                                      "7/8 to 1"))
+        # Align cams based on minimum and maximum size
+        df$compare <- ""
+        df <- within(df, {
+                     compare[lower < 11]                <- 1
+                     compare[lower >= 11 & lower < 14]  <- 2
+                     compare[lower >= 14 & lower < 16]  <- 3
+                     compare[lower >= 16 & lower < 19]  <- 4
+                     compare[lower >= 19 & lower < 21]  <- 5
+                     compare[lower >= 21 & lower < 25]  <- 6
+                     compare[lower >= 25 & lower < 31]  <- 7
+                     compare[lower >= 31 & lower < 42]  <- 8
+                     compare[lower >= 42 & lower < 54]  <- 9
+                     compare[lower >= 54 & lower < 188] <- 10
+                     compare[lower >= 188]              <- 11
+        })
     }
     # ToDo - Take list compare and filter()
     if(compare != 'all'){

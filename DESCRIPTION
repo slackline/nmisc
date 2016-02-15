@@ -9,6 +9,7 @@ Depends:
     dplyr (>= 0.4.1),
     googlesheets (>= 0.1.0),
     ggplot2 (>= 1.0.1),
+    ggthemes (>= 3.0.1),
     ggvis (>= 0.4.2),
     GGally (>= 0.5.0),
     haven (>= 0.2.0),

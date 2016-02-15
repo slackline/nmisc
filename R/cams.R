@@ -25,6 +25,7 @@ cams <- function(id          = '',
                  wrap.col    = 6,
                  text.size   = 16,
                  exclude.outlier = FALSE,
+                 theme       = 'ggplot2',
                  ...){
     # Refresh data if id/password specified
     if(id != '' | passwd != ''){
@@ -113,10 +114,13 @@ cams <- function(id          = '',
         theme(legend.position = "none",
               axis.text.y = element_text(size  = 8),
               strip.text.y = element_text(angle = 0))
+    ## ToDo - Change the following to just use facet_*() to add specfieid custom scales
+    ##        regardless of x or y and have ncol added by facet wrap conditional on it
+    ##        being specified
     if(free.scales == 'free_y'){
         results$all.manufacturer <- results$all.manufacturer +
                                     facet_grid(manufacturer.model ~ .,
-                                               scales = 'free_y')
+                                               scales = free.scales)
     }
     else if(free.scales == 'free_x' | free.scales == 'free' ){
         results$all.manufacturer <- results$all.manufacturer +
@@ -175,5 +179,20 @@ cams <- function(id          = '',
         xlab("Range (mm)") +
         ylab("Weight (g)") +
         theme(legend.position = "none")
-    return(results)
+                                        # Add theme
+    if(theme == 'ggplot2'){
+        return(results)    
+    }
+    else if(theme == 'tufte'){
+        return(results)
+    }
+    else if(theme == 'light'){
+        return(results)
+    }
+    else if(theme == 'manufacturers'){
+        return(results)
+    }
+    ## else if(theme == ''){
+    ##     return(results)
+    ## }    
 }

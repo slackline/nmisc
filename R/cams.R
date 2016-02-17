@@ -12,7 +12,8 @@
 #' @param wrap.col Number of columns to wrap \code{facet_wrap} by.
 #' @param wrap.row Number of rows to wrap \code{facet_wrap} by.
 #' @param text.size Size of text in graphs in pts.
-#' @param exclude.outlier Excludes the Valley Giant 12 from smoothing. 
+#' @param exclude.outlier Excludes the Valley Giant 12 from smoothing.
+#' @param theme Theme for plotting, will support ggthemes() and custom themes.
 #' @export
 cams <- function(id          = '',
                  passwd      = '',
@@ -27,6 +28,31 @@ cams <- function(id          = '',
                  exclude.outlier = FALSE,
                  theme       = 'ggplot2',
                  ...){
+    # Apply theme function
+    apply_theme <- function(x = results$all,
+                            theme = theme){
+        if(theme != 'ggplot2'){
+            x <- x + theme_tufte()
+        }
+        return(x)
+        ## else if(theme == 'tufte'){
+        ##     else if(theme == 'base'){
+        ##     else if(theme == 'light'){
+        ##     else if(theme == 'manufacturers'){
+        ##     else if(theme == 'calc'){
+        ##     else if(theme == 'few'){
+        ##     else if(theme == 'fivethirtyeight'){
+        ##     else if(theme == 'gdocs'){
+        ##     else if(theme == 'hc'){
+        ##     else if(theme == 'par'){
+        ##     else if(theme == 'pander'){
+        ##     else if(theme == 'solarized'){
+        ##     else if(theme == 'stata'){
+        ##     else if(theme == 'wsj'){
+        ##     else if(theme == 'light'){
+        ##     else if(theme == ''){
+        ##     }
+    }
     # Refresh data if id/password specified
     if(id != '' | passwd != ''){
         session.info <- gs_auth(new_user = FALSE,
@@ -179,20 +205,5 @@ cams <- function(id          = '',
         xlab("Range (mm)") +
         ylab("Weight (g)") +
         theme(legend.position = "none")
-                                        # Add theme
-    if(theme == 'ggplot2'){
-        return(results)    
-    }
-    else if(theme == 'tufte'){
-        return(results)
-    }
-    else if(theme == 'light'){
-        return(results)
-    }
-    else if(theme == 'manufacturers'){
-        return(results)
-    }
-    ## else if(theme == ''){
-    ##     return(results)
-    ## }    
+    return(results)
 }

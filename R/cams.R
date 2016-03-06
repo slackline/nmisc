@@ -27,6 +27,7 @@ cams <- function(id          = '',
                  text.size   = 16,
                  exclude.outlier = FALSE,
                  theme       = 'ggplot2',
+##                 theme       = 'theme_basse()',
                  ...){
     # Apply theme function
     apply_theme <- function(x = results$all,
@@ -35,6 +36,7 @@ cams <- function(id          = '',
             x <- x + theme_tufte()
         }
         return(x)
+        ## x <- x + theme
         ## else if(theme == 'tufte'){
         ##     else if(theme == 'base'){
         ##     else if(theme == 'light'){

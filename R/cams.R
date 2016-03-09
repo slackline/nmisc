@@ -27,14 +27,11 @@ cams <- function(id          = '',
                  text.size   = 16,
                  exclude.outlier = FALSE,
                  theme       = 'ggplot2',
-##                 theme       = 'theme_basse()',
                  ...){
     # Apply theme function
     apply_theme <- function(x = results$all,
                             theme = theme){
-        if(theme != 'ggplot2'){
-            x <- x + theme_tufte()
-        }
+        x <- x + theme
         return(x)
         ## x <- x + theme
         ## else if(theme == 'tufte'){
@@ -219,5 +216,115 @@ cams <- function(id          = '',
         xlab("Range (mm)") +
         ylab("Weight (g)") +
         theme(legend.position = "none")
+    if(theme == 'ggplot2'){
+        return(results)
+    }
+    else if(theme == 'tufte'){
+        results$all                <- results$all + theme_tufte() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_tufte() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_tufte() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_tufte() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_tufte() + theme(legend.position = "none")
+    }
+    else if(theme == 'base'){
+        results$all                <- results$all + theme_base() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_base() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_base() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_base() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_base() + theme(legend.position = "none")
+    }
+    else if(theme == 'light'){
+        results$all                <- results$all + theme_light() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_light() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_light() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_light() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_light() + theme(legend.position = "none")
+    }
+    else if(theme == 'manufacturers'){
+        results$all                <- results$all + theme_manufacturers() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_manufacturers() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_manufacturers() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_manufacturers() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_manufacturers() + theme(legend.position = "none")
+    }
+    else if(theme == 'calc'){
+        results$all                <- results$all + theme_calc() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_calc() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_calc() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_calc() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_calc() + theme(legend.position = "none")
+    }
+    else if(theme == 'few'){
+        results$all                <- results$all + theme_few() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_few() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_few() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_few() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_few() + theme(legend.position = "none")
+    }
+    else if(theme == 'fivethirtyeight'){
+        results$all                <- results$all + theme_fivethirtyeight() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_fivethirtyeight() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_fivethirtyeight() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_fivethirtyeight() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_fivethirtyeight() + theme(legend.position = "none")
+    }
+    else if(theme == 'gdocs'){
+        results$all                <- results$all + theme_gdocs() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_gdocs() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_gdocs() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_gdocs() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_gdocs() + theme(legend.position = "none")
+    }
+    else if(theme == 'hc'){
+        results$all                <- results$all + theme_hc() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_hc() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_hc() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_hc() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_hc() + theme(legend.position = "none")
+    }
+    else if(theme == 'par'){
+        results$all                <- results$all + theme_par() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_par() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_par() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_par() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_par() + theme(legend.position = "none")
+    }
+    else if(theme == 'pander'){
+        results$all                <- results$all + theme_pander() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_pander() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_pander() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_pander() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_pander() + theme(legend.position = "none")
+    }
+    else if(theme == 'solarized'){
+        results$all                <- results$all + theme_solarized() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_solarized() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_solarized() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_solarized() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_solarized() + theme(legend.position = "none")
+    }
+    else if(theme == 'stata'){
+        results$all                <- results$all + theme_tufte() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_tufte() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_tufte() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_tufte() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_tufte() + theme(legend.position = "none")
+    }
+    else if(theme == 'wsj'){
+        results$all                <- results$all + theme_wsj() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_wsj() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_wsj() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_wsj() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_wsj() + theme(legend.position = "none")
+    }
+    else if(theme == 'light'){
+        results$all                <- results$all + theme_light() + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme_light() + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme_light() + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme_light() + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme_light() + theme(legend.position = "none")
+    }
+    ## else if(theme == ''){
+    ## }
     return(results)
 }

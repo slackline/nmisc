@@ -28,30 +28,6 @@ cams <- function(id          = '',
                  exclude.outlier = FALSE,
                  theme       = 'ggplot2',
                  ...){
-    # Apply theme function
-    apply_theme <- function(x = results$all,
-                            theme = theme){
-        x <- x + theme
-        return(x)
-        ## x <- x + theme
-        ## else if(theme == 'tufte'){
-        ##     else if(theme == 'base'){
-        ##     else if(theme == 'light'){
-        ##     else if(theme == 'manufacturers'){
-        ##     else if(theme == 'calc'){
-        ##     else if(theme == 'few'){
-        ##     else if(theme == 'fivethirtyeight'){
-        ##     else if(theme == 'gdocs'){
-        ##     else if(theme == 'hc'){
-        ##     else if(theme == 'par'){
-        ##     else if(theme == 'pander'){
-        ##     else if(theme == 'solarized'){
-        ##     else if(theme == 'stata'){
-        ##     else if(theme == 'wsj'){
-        ##     else if(theme == 'light'){
-        ##     else if(theme == ''){
-        ##     }
-    }
     # Refresh data if id/password specified
     if(id != '' | passwd != ''){
         session.info <- gs_auth(new_user = FALSE,
@@ -99,17 +75,60 @@ cams <- function(id          = '',
                      by.range[lower >= 42 & lower < 54]   <- 9
                      by.range[lower >= 54 & lower < 188]  <- 10
                      by.range[lower >= 188]               <- 11
-                     ## by.number[size = '']  <- 1
-                     ## by.number[size = '']  <- 2
-                     ## by.number[size = '']  <- 3
-                     ## by.number[size = '']  <- 4
-                     ## by.number[size = '']  <- 5
-                     ## by.number[size = '']  <- 6
-                     ## by.number[size = '']  <- 7
-                     ## by.number[size = '']  <- 8
-                     ## by.number[size = '']  <- 9
-                     ## by.number[size = '']  <- 10
-                     ## by.number[size = '']  <- 11
+                     by.number[size = '000']  <- 1
+                     by.number[size = '00']   <- 1
+                     by.number[size = '00/0'] <- 1
+                     by.number[size = '0']    <- 1
+                     by.number[size = '0.1']  <- 1
+                     by.number[size = '0.2']  <- 1
+                     by.number[size = '0.3']  <- 1
+                     by.number[size = '1/3']  <- 1
+                     by.number[size = '3/8']  <- 1
+                     by.number[size = '0.4']  <- 1
+                     by.number[size = '0.5']  <- 2
+                     by.number[size = '1/2']  <- 2
+                     by.number[size = '0.6']  <- 2
+                     by.number[size = '2/3']  <- 2
+                     by.number[size = '0.65'] <- 2
+                     by.number[size = '0.7']  <- 2
+                     by.number[size = '3/4']  <- 2
+                     by.number[size = '0.8']  <- 2
+                     by.number[size = '4/5']  <- 2
+                     by.number[size = '0.85'] <- 2
+                     by.number[size = '7/8']  <- 2
+                     by.number[size = '0.95'] <- 2
+                     by.number[size = '1']  <- 3
+                     by.number[size = '1.25']  <- 3
+                     by.number[size = '1.5']  <- 3
+                     by.number[size = '1.75']  <- 3
+                     by.number[size = '2']  <- 4
+                     by.number[size = '2']  <- 4
+                     by.number[size = '2']  <- 4
+                     by.number[size = '2.5']  <- 4
+                     by.number[size = '3']  <- 4
+                     by.number[size = '3.5']  <- 4
+                     by.number[size = '4']  <- 4
+                     by.number[size = 'Small']  <- 4
+                     by.number[size = 'Medium']  <- 4
+                     by.number[size = 'Large']  <- 5
+                     by.number[size = '5']  <- 5
+                     by.number[size = '6']  <- 5
+                     by.number[size = '7']  <- 5
+                     by.number[size = '8']  <- 5
+                     by.number[size = '9']  <- 5
+                     by.number[size = '12']  <- 5
+                     by.number[size = '1/3 to 3/8']  <- 6
+                     by.number[size = '3/8 to 1/2']  <- 6
+                     by.number[size = '1/2 to 3/4']  <- 6
+                     by.number[size = '3/4 to 7/8']  <- 6
+                     by.number <- factor(by.number,
+                                         levels = c(1:6),
+                                         labels = c("Micro (< 0.5)",
+                                                    "Small (0.5 to < 1.0)",
+                                                    "Medium (1.0 to < 2.0)",
+                                                    "Large (2.0 to < 5.0)",
+                                                    "Monster (>= 5.0)",
+                                                    "Offsets"))
         })
     }
     # ToDo - Take list compare and filter()
@@ -132,7 +151,7 @@ cams <- function(id          = '',
                                     axels        = mean(axels),
                                     lobes        = mean(lobes))
     # Plot every cam
-    results$all.range <- dplyr::select(df, manufacturer.model, size, manufacturer.model.size, lower, upper) %>%
+    results$all.range <- dplyr::select(df, manufacturer.model, size, manufacturer.model.size, lower, upper, by.) %>%
                          melt(id.vars = c("manufacturer.model", "size", "manufacturer.model.size"))
     results$all <- ggplot(results$all.range,
                           aes(value,
@@ -143,8 +162,8 @@ cams <- function(id          = '',
         theme(legend.position = "none",
               axis.text.y = element_text(size  = 8))
     results$all.manufacturer <- ggplot(results$all.range,
-                          aes(value,
-                              size)) +
+                                       aes(value,
+                                           size)) +
         geom_line(aes(colour = manufacturer.model)) +
         xlab("Range (mm)") +
         ylab("Cam (Size)") +

@@ -27,6 +27,8 @@ cams <- function(id          = '',
                  text.size   = 16,
                  exclude.outlier = FALSE,
                  theme       = 'ggplot2',
+                 by.range    = '16 to < 18mm',
+                 by.number   = 'Micro (< 0.5)',
                  ...){
     # Refresh data if id/password specified
     if(id != '' | passwd != ''){
@@ -61,8 +63,8 @@ cams <- function(id          = '',
                                      "3/4 to 7/8", "3/4 to 1",
                                      "7/8 to 1"))
         # Align cams based on minimum and maximum size
-        df$by.range  <- ""
-        df$by.number <- ""
+        df$by.range  <- 1
+        df$by.number <- 1
         df <- within(df, {
                      by.range[lower < 11]                 <- 1
                      by.range[lower >= 11 & lower < 14]   <- 2
@@ -75,6 +77,19 @@ cams <- function(id          = '',
                      by.range[lower >= 42 & lower < 54]   <- 9
                      by.range[lower >= 54 & lower < 188]  <- 10
                      by.range[lower >= 188]               <- 11
+                     by.range <- factor(by.range,
+                                        levels = c(1:11),
+                                        labels = c('< 11mm',
+                                                   '11 to < 14mm',
+                                                   '14 to < 16mm',
+                                                   '16 to < 18mm',
+                                                   '19 to < 21mm',
+                                                   '21 to < 25mm',
+                                                   '25 to < 31mm',
+                                                   '31 to < 42mm',
+                                                   '42 to < 54mm',
+                                                   '54 to < 188mm',
+                                                   '>= 188mm'))
                      by.number[size = '000']  <- 1
                      by.number[size = '00']   <- 1
                      by.number[size = '00/0'] <- 1
@@ -123,22 +138,24 @@ cams <- function(id          = '',
                      by.number[size = '3/4 to 7/8']  <- 6
                      by.number <- factor(by.number,
                                          levels = c(1:6),
-                                         labels = c("Micro (< 0.5)",
-                                                    "Small (0.5 to < 1.0)",
-                                                    "Medium (1.0 to < 2.0)",
-                                                    "Large (2.0 to < 5.0)",
-                                                    "Monster (>= 5.0)",
-                                                    "Offsets"))
+                                         labels = c('Micro (< 0.5)',
+                                                    'Small (0.5 to < 1.0)',
+                                                    'Medium (1.0 to < 2.0)',
+                                                    'Large (2.0 to < 5.0)',
+                                                    'Monster (>= 5.0)',
+                                                    'Offsets'))
         })
     }
+    names(df) %>% print()
     # ToDo - Take list compare and filter()
     if(compare != 'all'){
         df <- filter_(df, )
     }
     results <- list()
     results$df <- df
+    names(results$df) %>% print()
     # Return summary data frame by manjfacturer/model
-    results$summary.df <- summary.df <- group_by(df,
+    results$summary.df <- summary.df <- group_by(results$df,
                                                  manufacturer.model) %>%
                           summarise(n            = n(),
                                     min.size     = min(lower),
@@ -151,7 +168,7 @@ cams <- function(id          = '',
                                     axels        = mean(axels),
                                     lobes        = mean(lobes))
     # Plot every cam
-    results$all.range <- dplyr::select(df, manufacturer.model, size, manufacturer.model.size, lower, upper, by.) %>%
+    results$all.range <- dplyr::select(results$df, manufacturer.model, size, manufacturer.model.size, lower, upper) %>%
                          melt(id.vars = c("manufacturer.model", "size", "manufacturer.model.size"))
     results$all <- ggplot(results$all.range,
                           aes(value,
@@ -185,8 +202,28 @@ cams <- function(id          = '',
                                                ncol   = wrap.col) +
                                     theme(text = element_text(size = text.size))
     }
+    # Plotting by selected range
+    names(results$df) %>% print()
+    print(by.range)
+    dim(results$df) %>% print()
+    dplyr::filter(results$df, by.range == by.range)
+    dim(results$df) %>% print()
+    typeof(results$df$by.range) %>% print()
+    table(results$df$by.range) %>% print()
+    results$by.range <- dplyr::filter(results$df, by.range == by.range) %>%
+                        dplyr::select(manufacturer.model, by.range, lower, upper) %>%
+                           group_by(manufacturer.model) %>%
+                        melt(id.vars = c("manufacturer.model", "by.range"))
+    results$by.range <- ggplot(results$by.range,
+                                         aes(value,
+                                             manufacturer.model)) +
+        geom_line(aes(group = manufacturer.model, colour = manufacturer.model)) +
+        xlab("Range (mm)") +
+        ylab("Cam (Manufacturer / Model)") +
+        theme(legend.position = "none")
+    # Plotting by selected number
     # Range covered by a manufacturers model
-    results$model.range <- dplyr::select(df, manufacturer.model, lower, upper) %>%
+    results$model.range <- dplyr::select(results$df, manufacturer.model, lower, upper) %>%
                            group_by(manufacturer.model) %>%
                            summarise(lower = min(lower),
                                      upper = max(upper)) %>%
@@ -207,7 +244,7 @@ cams <- function(id          = '',
     ##     ylab("Cam (Manufacturer / Model)") +
     ##     facet_grid(manufacturer ~.)
     # Strength v Range
-    results$range.strength <- ggplot(df,
+    results$range.strength <- ggplot(results$df,
                                      aes(range,
                                          strength.active.max)) +
         geom_point(aes(colour = factor(manufacturer.model))) +
@@ -227,7 +264,7 @@ cams <- function(id          = '',
                                           method = smooth)
     }
     # Strength v Weight
-    results$range.weight <- ggplot(df,
+    results$range.weight <- ggplot(results$df,
                                    aes(range,
                                        weight)) +
         geom_point(aes(colour = factor(manufacturer.model))) +

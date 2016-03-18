@@ -179,51 +179,33 @@ cams <- function(id              = '',
     }
     results <- list()
     results$df <- df
-    # ToDo - Take list compare and filter()
-    if(!is.na(cam.range) | !is.na(cam.number) | ! is.na(cam.min) | is.na(cam.max)){
-    # ToDo - Filter data based on above four then plot once, should permit filtering on
-    #        range/number first and then by min/max
-        if(!is.na(cam.range)){
-            df <- dplyr::filter(results$df, by.lower.range == cam.range) %>%
-                  dplyr::select(manufacturer.model.size, model.size, manufacturer.model, size,  lower, upper, range) %>%
-                melt(id.vars = c("manufacturer.model.size", "model.size", "manufacturer.model", "size"))
-            head(df) %>% print()
+    # Filter data based on options, default is full range
+    if(!is.na(cam.range)){
+        df <- dplyr::filter(results$df, by.lower.range == cam.range) %>%
+            dplyr::select(manufacturer, model, manufacturer.model.size, model.size, manufacturer.model, size,
+                          lower, upper, range, weight, strength.active.min, strength.active.max) %>%
+            melt(id.vars = c("manufacturer", "model", "manufacturer.model.size", "model.size", "manufacturer.model", "size"))
+    }
+    else if(!is.na(cam.number)){
+        df <- dplyr::filter(results$df, by.number == cam.number) %>%
+            dplyr::select(manufacturer, model, manufacturer.model.size, model.size, manufacturer.model, size,
+                          lower, upper, range, weight, strength.active.min, strength.active.max) %>%
+            roup_by(manufacturer.model.size) %>%
+            melt(id.vars = c("manufacturer", "model", "manufacturer.model.size", "model.size", "manufacturer.model", "size"))
+    }
+    if(!is.na(cam.min) | !is.na(cam.max)){
+        if(!is.na(cam.min) & is.na(cam.max)){
+            cam.max <- filter(results$df, lower > cam.min & lower < (cam.min * 1.5)) %>%
+                max(upper)
         }
-        else if(!is.na(cam.number)){
-            df <- dplyr::filter(results$df, by.number == cam.number) %>%
-                  dplyr::select(manufacturer.model.size, model.size, manufacturer.model, size, lower, upper, range) %>%
-                  roup_by(manufacturer.model.size) %>%
-                  melt(id.vars = c("manufacturer.model.size", "model.size", "manufacturer.model", "size"))
-            head(df) %>% print()
-        }
-        if(!is.na(cam.min) | !is.na(cam.max)){
-            if(!is.na(cam.min) & is.na(cam.max)){
-                cam.max <- filter(results$df, lower > cam.min & lower < (cam.min * 1.5)) %>%
-                           max(upper)
-            }
             else if(is.na(cam.min) & !is.na(cam.max)){
                 cam.max <- filter(results$df, lower > cam.min & lower < (cam.min * 1.5)) %>%
-                           max(upper)
+                    max(upper)
             }
-            df <- dplyr::filter(results$df, lower > cam.min & upper < cam.max) %>%
-                  dplyr::select(manufacturer.model.size, model.size, manufacturer.model, size, lower, upper, range) %>%
-                  melt(id.vars = c("manufacturer.model.size", "model.size", "manufacturer.model", "size"))
-            head(df) %>% print()
-        }
-        # Selected range
-        ## results$filtered <- ggplot(df,
-        ##                            aes(value,
-        ##                                manufacturer.model.size)) +
-        ##                     geom_line(aes(group = manufacturer.model.size, colour = manufacturer.model.size)) +
-        ##                     xlab("Range (mm)") +
-        ##                     ylab("Cam (Manufacturer / Model)") +
-        ##                     theme(legend.position = "none")
-    }
-    else{
-        names(df) %>% print()
-        df <- dplyr::select(results$df, manufacturer.model.size, model.size, manufacturer.model, size, lower, upper) %>%
-            melt(id.vars = c("manufacturer.model.size", "model.size", "manufacturer.model", "size"))        
-        head(df) %>% print()
+        df <- dplyr::filter(results$df, lower >= cam.min & upper <= cam.max) %>%
+            dplyr::select(manufacturer, model, manufacturer.model.size, model.size, manufacturer.model, size,
+                          lower, upper, range, weight, strength.active.min, strength.active.max) %>%
+            melt(id.vars = c("manufacturer", "model", "manufacturer.model.size", "model.size", "manufacturer.model", "size"))
     }
     # Return a filtrered data frame
     results$df.filtered <- df
@@ -243,7 +225,7 @@ cams <- function(id              = '',
     # Plot every cam
     ## all.range <- dplyr::select(df, manufacturer.model, size, manufacturer.model.size, lower, upper) %>%
     ##                      melt(id.vars = c("manufacturer.model", "size", "manufacturer.model.size"))
-    results$all <- dplyr::filter(df, variable != 'range') %>%
+    results$all <- dplyr::filter(df, variable == 'lower' | variable == 'upper') %>%
                    ggplot(aes(value,
                               manufacturer.model.size)) +
         geom_line(aes(colour = manufacturer.model)) +
@@ -251,7 +233,7 @@ cams <- function(id              = '',
         ylab("Cam (Manufacturer / Model / Size)") +
         theme(legend.position = "none",
               axis.text.y = element_text(size  = 8))
-    results$all.manufacturer <- dplyr::filter(df, variable != 'range') %>%
+    results$all.manufacturer <- dplyr::filter(df, variable == 'lower' | variable == 'upper') %>%
                                 ggplot(aes(value,
                                            size)) +
         geom_line(aes(colour = manufacturer.model)) +
@@ -276,21 +258,7 @@ cams <- function(id              = '',
                                     theme(text = element_text(size = text.size))
     }
     # Range covered by a manufacturers model
-    model.range <-  ##%>%
-#        melt(id.vars = 'manufacturer.model', varnames = 'variable', value.name = 'value') %>%
-        ## tail() %>% print()
-        ##            dcast(manufacturer.model ~ variable, value.var = 'valueo') %>%
-        ## head() %>% print()
-        ##                    group_by(manufacturer.model, variable) %>%
-        ##            summarise(lower = min(value),
-        ##                      upper = max(value)) %>%
-        ##            mutate(range <- lower) %>%
-        ##            mutate(range[upper > lower] <- upper) %>%
-        ## head() %>% print()
-        ##            melt(id.vars = 'manufacturer.model') %>%
-        ## head() %>% print()
-
-    results$manufacturer.model <- dplyr::filter(df, variable != 'range') %>%
+    results$manufacturer.model <- dplyr::filter(df, variable == 'lower' | variable == 'upper') %>%
                                   dplyr::select(manufacturer.model, variable, value) %>%
                                   ggplot(aes(value,
                                              manufacturer.model)) +
@@ -308,28 +276,36 @@ cams <- function(id              = '',
     ##     ylab("Cam (Manufacturer / Model)") +
     ##     facet_grid(manufacturer ~.)
     # Strength v Range
-    results$range.strength <- ggplot(df,
-                                     aes(range,
+    results$range.strength <- dplyr::filter(df, variable == 'range' | variable == 'strength.active.max') %>%
+                              dplyr::select(manufacturer.model, size, variable, value) %>%
+                              dcast(manufacturer.model + size ~ variable) %>%
+                              ggplot(aes(range,
                                          strength.active.max)) +
                               geom_point(aes(colour = factor(manufacturer.model))) +
                               xlab("Range (mm)") +
-                              ylab("Max Active Strength (kN)") +
-                              theme(legend.position = "none")
+                              ylab("Max Active Strength (kN)") ## +
+                              ## theme(legend.position = "none")
     if(exclude.outlier == FALSE){
         results$range.strength = results$range.strength +
-                                 geom_smooth(method = smooth, size = 1) 
-        
+                                 geom_smooth(method = smooth, size = 1)         
     }
     else if(exclude.outlier == TRUE){
+        t <- dplyr::filter(df, variable == 'range' | variable == 'strength.active.max') %>%
+             dplyr::select(manufacturer.model, size, variable, value) %>%
+             dcast(manufacturer.model + size ~ variable) %>%
+             dplyr::filter(size != '12')
         results$range.strength <- results$range.strength +
-                                  geom_smooth(data = filter(df, size != "12") ,
+                                  geom_smooth(data = t,
                                           aes(range,
                                               strength.active.max),
                                           method = smooth)
+        rm(t)
     }
-    # Strength v Weight
-    results$range.weight <- ggplot(df,
-                                   aes(range,
+    ## # Strength v Weight
+    results$range.weight <- dplyr::filter(df, variable == 'range' | variable == 'weight') %>%
+                            dplyr::select(manufacturer.model, size, variable, value) %>%
+                            dcast(manufacturer.model + size ~ variable) %>%
+                            ggplot(aes(range,
                                        weight)) +
                               geom_point(aes(colour = factor(manufacturer.model))) +
                               geom_smooth(method = smooth, size = 1) + 

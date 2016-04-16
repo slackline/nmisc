@@ -54,20 +54,20 @@ cams <- function(id              = '',
                      model.size              = paste(model, size, sep = " "),
                      manufacturer.model.size = paste(manufacturer, model, size, sep = " "))
         # Create factor out of size
-        df$size <- factor(df$size,
-                          levels = c("000", "00", "00/0", "0/1", "0",
-                                     "0.1", "0.2", "0.25", "0.3", "1/3", "3/8",
-                                     "0.4", "0.5", "1/2", "0.6", "2/3", "0.65",
-                                     "0.7", "0.75", "3/4", "0.8", "4/5", "0.85", "7/8",
-                                     "0.95", "1", "1.25", "1.5",
-                                     "1.75", "2", "2.5", "3", "3.5",
-                                     "4", "5", "6", "7", "8", "9", "12",
-                                     "Small", "Medium", "Large", 
-                                     "1/3 to 3/8",
-                                     "3/8 to 1/2",
-                                     "1/2 to 3/4",
-                                     "3/4 to 7/8", "3/4 to 1",
-                                     "7/8 to 1"))
+        df$size <- factor(df$size)
+                          ## labels = c("000", "00", "00/0", "0/1", "0",
+                          ##            "0.1", "0.2", "0.25", "0.3", "1/3", "3/8",
+                          ##            "0.4", "0.5", "1/2", "0.6", "2/3", "0.65",
+                          ##            "0.7", "0.75", "3/4", "0.8", "4/5", "0.85", "7/8",
+                          ##            "0.95", "1", "1.25", "1.5",
+                          ##            "1.75", "2", "2.5", "3", "3.5",
+                          ##            "4", "5", "6", "7", "8", "9", "12",
+                          ##            "Small", "Medium", "Large",
+                          ##            "1/3 to 3/8",
+                          ##            "3/8 to 1/2",
+                          ##            "1/2 to 3/4",
+                          ##            "3/4 to 7/8", "3/4 to 1",
+                          ##            "7/8 to 1"))
         # Align cams based on minimum and maximum size
         df$by.lower.range  <- NA
         df$by.upper.range  <- NA
@@ -121,7 +121,7 @@ cams <- function(id              = '',
                                                    '42 to < 54mm',
                                                    '54 to < 188mm',
                                                    '>= 188mm'))
-                     by.number[size = '000']        <- 1
+                     by.number[size = 1]        <- 1
                      by.number[size = '00']         <- 1
                      by.number[size = '00/0']       <- 1
                      by.number[size = '0']          <- 1
@@ -287,7 +287,7 @@ cams <- function(id              = '',
                               ## theme(legend.position = "none")
     if(exclude.outlier == FALSE){
         results$range.strength = results$range.strength +
-                                 geom_smooth(method = smooth, size = 1)         
+                                 geom_smooth(method = smooth, size = 1)
     }
     else if(exclude.outlier == TRUE){
         t <- dplyr::filter(df, variable == 'range' | variable == 'strength.active.max') %>%
@@ -308,7 +308,7 @@ cams <- function(id              = '',
                             ggplot(aes(range,
                                        weight)) +
                               geom_point(aes(colour = factor(manufacturer.model))) +
-                              geom_smooth(method = smooth, size = 1) + 
+                              geom_smooth(method = smooth, size = 1) +
                               xlab("Range (mm)") +
                               ylab("Weight (g)") +
                               theme(legend.position = "none")

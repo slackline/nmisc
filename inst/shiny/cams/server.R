@@ -16,14 +16,26 @@ shinyServer(function(input, output){
     ## http://shiny.rstudio.com/tutorial/lesson5/
     ## http://shiny.rstudio.com/tutorial/lesson6/
     ## https://stackoverflow.com/questions/32148144/condition-filter-in-dplyr-based-on-shiny-input
-    ## 
+    ##
     dataInput <- reactive({
-                           if(is.null(input$to.compare) ){
-                               cams.df
-                           }
-                           else{
+                           if(!is.null(input$to.compare.manufacturer.model)){
                                filter(cams.df,
-                                      manufacturer.model %in% input$to.compare)
+                                      manufacturer.model.size %in% input$to.compare.manufacturer.model)
+                           }
+                           else if(!is.null(input$to.compare.manufacturer.range)){
+                               filter(cams.df,
+                                      manufacturer.model.size %in% input$to.compare.manufacturer.range)
+                           }
+                           else if(!is.null(input$to.compare.manufacturer.number)){
+                               filter(cams.df,
+                                      manufacturer.model.size %in% input$to.compare.manufacturer.number)
+                           }
+                           else if(!is.null(input$to.compare.manufacturer.model.size)){
+                               filter(cams.df,
+                                      manufacturer.model.size %in% input$to.compare.manufacturer.model.size)
+                           }
+                           else(is.null(input$to.compare)){
+                               cams.df
                            }
     })
     ## Set scales based on responses
@@ -49,6 +61,7 @@ shinyServer(function(input, output){
     ## })
     ## By Manufacturer
     output$all.manufacturer<- renderPlot({
+        print(df)
         cam.plot <- cams(df          = dataInput(),
                          smooth      = 'loess',
                          free.scales = scales(),
@@ -88,7 +101,7 @@ shinyServer(function(input, output){
                          ## theme = input$theme)
         cam.plot$range.weight
     })
-    ## ## 
+    ## ##
     ## output$all <- renderPlot({
     ##     cam.plot <- cams(df      = dataInput(),
     ##                      smooth = 'loess',

@@ -94,7 +94,7 @@ shinyServer(function(input, output){
                          free.scales = scales(),
                          wrap.col    = 6,
                          text.size   = 16)
-                         ## theme = input$theme)
+                         theme = input$theme)
         cam.plot$all.manufacturer
     })
     ## By Model Range
@@ -104,7 +104,7 @@ shinyServer(function(input, output){
                          free.scales = scales(),
                          wrap.col    = 6,
                          text.size   = 16)
-                         ## theme = input$theme)
+                         theme = input$theme)
         cam.plot$manufacturer.model
     })
     ## Range v Strength
@@ -115,7 +115,7 @@ shinyServer(function(input, output){
                          wrap.col        = 6,
                          text.size       = 16,
                          exclude.outlier = TRUE)
-                         ## theme = input$theme)
+                         theme = input$theme)
         cam.plot$range.strength
     })
     ## Range v Weight
@@ -125,7 +125,7 @@ shinyServer(function(input, output){
                          free.scales = scales(),
                          wrap.col    = 6,
                          text.size   = 16)
-                         ## theme = input$theme)
+                         theme = input$theme)
         cam.plot$range.weight
     })
     ## ##
@@ -135,7 +135,7 @@ shinyServer(function(input, output){
     ##                      free.scales = 'free_y',
     ##                      wrap.col    = 6,
     ##                      text.size   = 16)
-    ##                      ## theme = input$theme)
+    ##                      theme = input$theme)
     ##     cam.plot$all.range
     ## })
 })

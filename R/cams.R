@@ -313,11 +313,11 @@ cams <- function(id              = '',
                               ylab("Weight (g)") +
                               theme(legend.position = "none")
     if(!is.null(theme)){
-        results$all                <- results$all + theme
-        results$all.manufacturer   <- results$all.manufacturer + theme
-        results$manufacturer.model <- results$manufacturer.model + theme
-        results$range.strength     <- results$range.strength + theme
-        results$range.weight       <- results$range.weight + theme
+        results$all                <- results$all + theme + theme(legend.position = "none")
+        results$all.manufacturer   <- results$all.manufacturer + theme + theme(legend.position = "none")
+        results$manufacturer.model <- results$manufacturer.model + theme + theme(legend.position = "none")
+        results$range.strength     <- results$range.strength + theme + theme(legend.position = "none")
+        results$range.weight       <- results$range.weight + theme + theme(legend.position = "none")
     }
     ## if(theme == 'ggplot2'){
     ##     return(results)

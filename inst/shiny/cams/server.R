@@ -93,7 +93,7 @@ shinyServer(function(input, output){
                          smooth      = 'loess',
                          free.scales = scales(),
                          wrap.col    = 6,
-                         text.size   = 16)
+                         text.size   = 16,
                          theme = input$theme)
         cam.plot$all.manufacturer
     })
@@ -103,7 +103,7 @@ shinyServer(function(input, output){
                          smooth      = 'loess',
                          free.scales = scales(),
                          wrap.col    = 6,
-                         text.size   = 16)
+                         text.size   = 16,
                          theme = input$theme)
         cam.plot$manufacturer.model
     })
@@ -114,7 +114,7 @@ shinyServer(function(input, output){
                          free.scales     = scales(),
                          wrap.col        = 6,
                          text.size       = 16,
-                         exclude.outlier = TRUE)
+                         exclude.outlier = TRUE,
                          theme = input$theme)
         cam.plot$range.strength
     })
@@ -124,7 +124,7 @@ shinyServer(function(input, output){
                          smooth      = 'loess',
                          free.scales = scales(),
                          wrap.col    = 6,
-                         text.size   = 16)
+                         text.size   = 16,
                          theme = input$theme)
         cam.plot$range.weight
     })
@@ -134,7 +134,7 @@ shinyServer(function(input, output){
     ##                      smooth = 'loess',
     ##                      free.scales = 'free_y',
     ##                      wrap.col    = 6,
-    ##                      text.size   = 16)
+    ##                      text.size   = 16,
     ##                      theme = input$theme)
     ##     cam.plot$all.range
     ## })

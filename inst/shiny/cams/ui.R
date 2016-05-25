@@ -43,7 +43,7 @@ shinyUI(fluidPage(
                              ## selected = 'All',
                              multiple = TRUE
                              ),
-                 selectInput(inputId  = 'theme',
+                 selectInput(inputId  = 'custom.theme',
                              label    ='Choose graph theme :',
                              choices = c('Base'              = 'theme_base',
                                          'Black & White'     = 'theme_bw',

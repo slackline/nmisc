@@ -21,14 +21,19 @@ shinyUI(fluidPage(
                              multiple = TRUE
                              ),
                  selectInput(inputId  = 'to.compare.range',
-                             label    ='Choose cams to compare (By Range) :',
+                             label    ='Choose cams to compare (By Lower Range) :',
                              choices  = c(unique(cams.df$by.lower.range)),
                              selected = NULL,
                              multiple = FALSE
                              ),
                  selectInput(inputId  = 'to.compare.number',
                              label    ='Choose cams to compare (By Number) :',
-                             choices  = c(unique(cams.df$by.number)),
+                             choices  = c('<1',
+                                          '1-2',
+                                          '2-3',
+                                          '3-4',
+                                          '4-5',
+                                          '>5'),
                              selected = NULL,
                              multiple = FALSE
                              ),

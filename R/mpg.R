@@ -99,8 +99,10 @@ mpg <- function(id        = '',
     results$df        <- df
     results$mean.mpg_ <- df %>% mean(mpg, na.rm = TRUE)
     results$sd.mpg    <- df %>% sd(kpg, na.rm = FALSE)
-    results$mean.kpg  <- df %>% mean(km, na.rm = TRUE)
+    results$mean.kpg  <- df %>% mean(kpg, na.rm = TRUE)
     results$sd.kpg    <- df %>% sd(kpg, na.rm = FALSE)
+    results$mean.kpl  <- df %>% mean(kpl, na.rm = TRUE)
+    results$sd.kpl    <- df %>% sd(kpl, na.rm = FALSE)
     results$price     <- fuel_plot(y = 'price')
     results$price     <- fuel_plot(y = 'price', by = 'station')
     results$litre     <- fuel_plot(y = 'litre')

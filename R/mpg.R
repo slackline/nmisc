@@ -12,6 +12,7 @@ mpg <- function(id        = '',
                 passwd    = '',
                 mpg.doc   = 'Fuel Efficiency (Responses)',
                 mpg.sheet = 'Form Responses 1',
+                df        = fuel,
                 zoneinfo  = 'GMT',
                 ...){
     # Refresh data if id/password specified
@@ -22,11 +23,11 @@ mpg <- function(id        = '',
         # Identify specified spreadsheet
         fuel <- gs_title(mpg.doc, verbose = FALSE)
         # Read the data
-        fuel.df <- gs_read(ss = fuel,
+        df <- gs_read(ss = fuel,
                            ws = mpg.sheet)
         # Rename and format things
-        names(fuel.df) <- c("date", "vehicle", "mileage", "litre", "gbp", "station")
-        fuel.df <- within(fuel.df, {
+        names(df) <- c("date", "vehicle", "mileage", "litre", "gbp", "station")
+        df <- within(df, {
                           date <- mdy_hms(date, tz = zoneinfo)
                           vehicle <- factor(vehicle,
                                             levels = c("Honda Jazz","VW T4 Campervan"))
@@ -42,35 +43,35 @@ mpg <- function(id        = '',
                                                        "Other"))
         })
         # Derive miles, km, gallon, mpg, mpl, kpg, kpl, ppl, ppm, ppk
-        fuel.df <- mutate(fuel.df,
-                          miles  = mileage - lag(mileage),
-                          km     = miles * 1.60934,
-                          gallon = litre * 0.219969,
-                          price  = gbp / litre,
-                          mpg    = miles / gallon,
-                          mpl    = miles / litre,
-                          kpg    = km / gallon,
-                          kpl    = km /litre,
-                          ppm    = gbp / miles,
-                          ppk    = gbp / km,
-                          month  = month(date),
-                          year   = year(date))
+        df <- mutate(df,
+                     miles  = mileage - lag(mileage),
+                     km     = miles * 1.60934,
+                     gallon = litre * 0.219969,
+                     price  = gbp / litre,
+                     mpg    = miles / gallon,
+                     mpl    = miles / litre,
+                     kpg    = km / gallon,
+                     kpl    = km /litre,
+                     ppm    = gbp / miles,
+                     ppk    = gbp / km,
+                     month  = month(date),
+                     year   = year(date))
         # Melt the data to long format for ease of plotting
-        fuel.df <- melt(fuel.df,
-                        id.vars = c("vehicle", "date", "station"),
-                        measure.vars = c("mileage",
-                                         "litre",
-                                         "gallon",
-                                         "gbp",
-                                         "price",
-                                         "miles", "mpg", "mpl", "ppm",
-                                         "km",    "kpg", "kpl", "ppk"))
+        df <- melt(df,
+                   id.vars = c("vehicle", "date", "station"),
+                   measure.vars = c("mileage",
+                                    "litre",
+                                    "gallon",
+                                    "gbp",
+                                    "price",
+                                    "miles", "mpg", "mpl", "ppm",
+                                    "km",    "kpg", "kpl", "ppk"))
     }
     # Short helper function for plotting
-    fuel_plot <- function(df = fuel.df,
-                          x  = 'date',
-                          y  = 'mpg',
-                          by = NA){
+    fuel_plot <- function(.df = df,
+                          x   = 'date',
+                          y   = 'mpg',
+                          by  = NA){
         # Set labels
         xlab <- 'Date'
         if(y == 'price')      ylab <- 'Price (GBP)'
@@ -85,8 +86,8 @@ mpg <- function(id        = '',
         else if(y == 'kpl')   ylab <- 'Kilometres per Litre'
         else if(y == 'ppk')   ylab <- 'Price per Kilometre (GBP)'
         # Filter the data
-        df <- dplyr::filter(df, variable == y)
-        plot <- ggplot(df, aes(date, value)) + geom_smooth() +
+        .df <- dplyr::filter(.df, variable == y)
+        plot <- ggplot(.df, aes(date, value)) + geom_smooth() +
             xlab(xlab) + ylab(ylab)
         if(!is.na(by)){
             plot <- plot + aes_(fill = by)
@@ -95,21 +96,25 @@ mpg <- function(id        = '',
     }
     # Generate graphs and save to list for returning
     results <- list()
-    results$fuel.df <- fuel.df
-    results$price   <- fuel_plot(y = 'price')
-    results$price   <- fuel_plot(y = 'price', by = 'station')
-    results$litre   <- fuel_plot(y = 'litre')
-    results$gbp     <- fuel_plot(y = 'gbp')
-    results$miles   <- fuel_plot(y = 'miles')
-    results$mpg     <- fuel_plot(y = 'mpg')
-    results$mpl     <- fuel_plot(y = 'mpl')
-    results$ppm     <- fuel_plot(y = 'ppm')
-    results$km      <- fuel_plot(y = 'km')
-    results$kpg     <- fuel_plot(y = 'kpg')
-    results$kpl     <- fuel_plot(y = 'kpl')
-    results$ppk     <- fuel_plot(y = 'ppk')
+    results$df        <- df
+    results$mean.mpg_ <- df %>% mean(mpg, na.rm = TRUE)
+    results$sd.mpg    <- df %>% sd(kpg, na.rm = FALSE)
+    results$mean.kpg  <- df %>% mean(km, na.rm = TRUE)
+    results$sd.kpg    <- df %>% sd(kpg, na.rm = FALSE)
+    results$price     <- fuel_plot(y = 'price')
+    results$price     <- fuel_plot(y = 'price', by = 'station')
+    results$litre     <- fuel_plot(y = 'litre')
+    results$gbp       <- fuel_plot(y = 'gbp')
+    results$miles     <- fuel_plot(y = 'miles')
+    results$mpg       <- fuel_plot(y = 'mpg')
+    results$mpl       <- fuel_plot(y = 'mpl')
+    results$ppm       <- fuel_plot(y = 'ppm')
+    results$km        <- fuel_plot(y = 'km')
+    results$kpg       <- fuel_plot(y = 'kpg')
+    results$kpl       <- fuel_plot(y = 'kpl')
+    results$ppk       <- fuel_plot(y = 'ppk')
     # Plot Stations
-    results$station.df <- dplyr::select(fuel.df, station, date) %>% unique()
+    results$station.df <- dplyr::select(df, station, date) %>% unique()
     results$station <- ggplot(results$station.df, aes(station, fill = station)) + geom_bar() +
                        xlab("Petrol Station") + ylab("N") + guides(fill = FALSE)
     return(results)

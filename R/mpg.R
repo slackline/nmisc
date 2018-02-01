@@ -27,21 +27,35 @@ mpg <- function(id        = '',
                            ws = mpg.sheet)
         # Rename and format things
         names(df) <- c("date", "vehicle", "mileage", "litre", "gbp", "station")
-        df <- within(df, {
-                          date <- mdy_hms(date, tz = zoneinfo)
-                          vehicle <- factor(vehicle,
-                                            levels = c("Honda Jazz","VW T4 Campervan"))
-                          station <- factor(station,
-                                            levels = c("Tescos",
-                                                       "Morrisons",
-                                                       "Sainsburys",
-                                                       "Shell",
-                                                       "BP",
-                                                       "Texaco",
-                                                       "Esso",
-                                                       "Nisa",
-                                                       "Other"))
-        })
+        df <- df %>%
+            mutate(date    = mdy_hms(date, tz = zoneinfo),
+                   vehicle = factor(vehicle,
+                                     levels = c("Honda Jazz","VW T4 Campervan"))
+                   station = factor(station,
+                                    levels = c("Tescos",
+                                               "Morrisons",
+                                               "Sainsburys",
+                                               "Shell",
+                                               "BP",
+                                               "Texaco",
+                                               "Esso",
+                                               "Nisa",
+                                               "Other")))
+        ## df <- within(df, {
+        ##                   date <- mdy_hms(date, tz = zoneinfo)
+        ##                   vehicle <- factor(vehicle,
+        ##                                     levels = c("Honda Jazz","VW T4 Campervan"))
+        ##                   station <- factor(station,
+        ##                                     levels = c("Tescos",
+        ##                                                "Morrisons",
+        ##                                                "Sainsburys",
+        ##                                                "Shell",
+        ##                                                "BP",
+        ##                                                "Texaco",
+        ##                                                "Esso",
+        ##                                                "Nisa",
+        ##                                                "Other"))
+        ## })
         # Derive miles, km, gallon, mpg, mpl, kpg, kpl, ppl, ppm, ppk
         df <- mutate(df,
                      miles  = mileage - lag(mileage),

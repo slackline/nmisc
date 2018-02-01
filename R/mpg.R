@@ -30,7 +30,7 @@ mpg <- function(id        = '',
         df <- df %>%
             mutate(date    = mdy_hms(date, tz = zoneinfo),
                    vehicle = factor(vehicle,
-                                     levels = c("Honda Jazz","VW T4 Campervan"))
+                                     levels = c("Honda Jazz","VW T4 Campervan")),
                    station = factor(station,
                                     levels = c("Tescos",
                                                "Morrisons",

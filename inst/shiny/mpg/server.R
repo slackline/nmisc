@@ -23,8 +23,8 @@ server <- function(input, output, session){
             arrange(vehicle, date) %>%
             mutate(travelled_miles = mileage - lag(mileage, n = 1),
                    travelled_km    = km - lag(km, n = 1),
-                   mpg             = travelled_miles / gallon,
-                   kpl             = travelled_km / litre) %>%
+                   mpg             = travelled_miles / lag(gallon, n = 1),
+                   kpl             = travelled_km / lag(litre, n = 1)) %>%
             ungroup()
         return(df)
         print("Post Reading")

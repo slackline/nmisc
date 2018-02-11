@@ -27,6 +27,7 @@ side <- dashboardSidebar(
                 ##                          Gallon = "g"),
                 ##              selected = "l"),
                 sidebarMenu(
+                    menuItem("About",       tabName = "about",     icon = icon("dashboard")),
                     menuItem("Data",        tabName = "data",     icon = icon("dashboard")),
                     menuItem("Distance",    tabName = "distance", icon = icon("dashboard")),
                     menuItem("Fuel Prices", tabName = "prices",   icon = icon("dashboard")),
@@ -37,6 +38,11 @@ side <- dashboardSidebar(
 ## Body
 body <- dashboardBody(
             tabItems(
+                tabItem(tabName = "about",
+                        h2("About"),
+                        fluidRow(width = 12,
+                                 p("This site plots your fuel efficiency and distance travelled.  Currently it requires a file to be uploaded with a specific format output by a GoogleSheet.  In time this site will be updated to allow you to use the form yourself to collect data and then upload it directly here (I hope).  For now a sample file should have been shared with you to have a go with.")
+                        )),
                 tabItem(tabName = "data",
                         h2("Data"),
                         fluidRow(width = 12,

@@ -1,6 +1,6 @@
 Package: nmisc
 Title: Miscelaneous helper functions of my own
-Version: 0.0.2.0101
+Version: 20180211
 Authors@R: person("Neil", "Shephard", email = "nshephard@gmail.com", role = c("aut", "cre"))
 Description: Personal helper functions
 Depends:
@@ -16,6 +16,8 @@ Depends:
     lubridate (>= 1.5.0),
     rsconnect (>= 0.4.1),
     shiny (>= 0.12.2),
+    shinydashboard (>= 0.6.1),
+    shinythemes (>= 1.1.1),
     stringr (>= 1.0.0),
     tidyr (>= 0.3.1)
 License: GPL-2

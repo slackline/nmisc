@@ -27,8 +27,6 @@ server <- function(input, output, session){
                    kpl             = travelled_km / lag(litre, n = 1)) %>%
             ungroup()
         return(df)
-        print("Post Reading")
-        names(df) %>% print()
     })
     ## Render table
     output$data <- renderTable({
@@ -36,8 +34,6 @@ server <- function(input, output, session){
     })
     ## Plot overall distance travelled by date
     output$distance <- renderPlot({
-        names(df()) %>% print()
-        dplyr::select(df(), date, mileage, vehicle) %>% print()
         ggplot(df(), aes(x = date,
                          y = mileage,
                          colour = vehicle)) +
@@ -45,7 +41,9 @@ server <- function(input, output, session){
             xlab("Date") +
             ylab("Mileage") +
             theme_bw() +
-            facet_wrap(~vehicle, ncol = 2, scales = "free_y")
+            facet_wrap(~vehicle, ncol = 2, scales = "free_y") %>%
+            ggplotly()
+
     })
     ## Plot Fuel Prices
     output$fuel_prices <- renderPlot({

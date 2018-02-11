@@ -33,53 +33,53 @@ server <- function(input, output, session){
         return(df())
     })
     ## Plot overall distance travelled by date
-    output$distance <- renderPlot({
-        ggplot(df(), aes(x = date,
-                         y = mileage,
-                         colour = vehicle)) +
+    output$distance <- renderPlotly({
+        t <- ggplot(df(), aes(x = date,
+                              y = mileage,
+                              colour = vehicle)) +
             geom_line() +
             xlab("Date") +
             ylab("Mileage") +
             theme_bw() +
-            facet_wrap(~vehicle, ncol = 2, scales = "free_y") %>%
-            ggplotly()
-
+            facet_wrap(~vehicle, ncol = 2, scales = "free_y")
+        ggplotly(t)
     })
     ## Plot Fuel Prices
-    output$fuel_prices <- renderPlot({
-        ggplot(df(), aes(x = date,
-                         y = pence_litre,
-                         colour = source)) +
-            geom_line() +
-            xlab("Date") +
-            ylab("Cost (pence/litre)") +
-            theme_bw() +
-            scale_colour_discrete(name = "Petrol Station")
+    output$fuel_prices <- renderPlotly({
+        t <- ggplot(df(), aes(x = date,
+                              y = pence_litre,
+                              colour = source)) +
+             geom_line() +
+             xlab("Date") +
+             ylab("Cost (pence/litre)") +
+             theme_bw() +
+             scale_colour_discrete(name = "Petrol Station")
+        ggplotly(t)
     })
     ## Fuel efficiency in mpg
-    output$mpg <- renderPlot({
-        ggplot(df(), aes(x = date,
-                         y = mpg)) +
-            geom_point(aes(colour = source)) +
-            geom_smooth() +
-            xlab("Date") +
-            ylab("MPG") +
-            theme_bw() +
-            facet_wrap(~vehicle, ncol = 2) +
-            scale_colour_discrete(name = "Petrol Station")
-
+    output$mpg <- renderPlotly({
+        t <- ggplot(df(), aes(x = date,
+                              y = mpg)) +
+             geom_point(aes(colour = source)) +
+             geom_smooth() +
+             xlab("Date") +
+             ylab("MPG") +
+             theme_bw() +
+             facet_wrap(~vehicle, ncol = 2) +
+             scale_colour_discrete(name = "Petrol Station")
+        ggplotly(t)
     })
     ## Fuel efficiency in mpg
-    output$kpl <- renderPlot({
-        ggplot(df(), aes(x = date,
-                         y = kpl)) +
-            geom_point(aes(colour = source)) +
-            geom_smooth() +
-            xlab("Date") +
-            ylab("km/Litre") +
-            theme_bw() +
-            facet_wrap(~vehicle, ncol = 2) +
-            scale_colour_discrete(name = "Petrol Station")
-
+    output$kpl <- renderPlotly({
+        t <- ggplot(df(), aes(x = date,
+                              y = kpl)) +
+             geom_point(aes(colour = source)) +
+             geom_smooth() +
+             xlab("Date") +
+             ylab("km/Litre") +
+             theme_bw() +
+             facet_wrap(~vehicle, ncol = 2) +
+             scale_colour_discrete(name = "Petrol Station")
+        ggplotly(t)
     })
 }

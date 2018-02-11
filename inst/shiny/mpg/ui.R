@@ -53,22 +53,22 @@ body <- dashboardBody(
                 tabItem(tabName = "distance",
                         fluidRow(width = 12,
                                  h2("Distance"),
-                                 box(plotOutput("distance"))
+                                 box(plotlyOutput("distance"))
                         )),
                 tabItem(tabName = "prices",
                         h2("Fuel Prices"),
                         fluidRow(width = 12,
-                                 box(plotOutput("fuel_prices"))
+                                 box(plotlyOutput("fuel_prices"))
                         )),
                 tabItem(tabName = "mpg",
                         h2("Miles per Gallon"),
                         fluidRow(width = 12,
-                                 box(plotOutput("mpg"))
+                                 box(plotlyOutput("mpg"))
                         )),
                 tabItem(tabName = "kpl",
                         h2("Kilometeres per Litre"),
                         fluidRow(width = 12,
-                                 box(plotOutput("kpl"))
+                                 box(plotlyOutput("kpl"))
                         ))
                     )
 )

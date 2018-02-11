@@ -41,7 +41,9 @@ body <- dashboardBody(
                 tabItem(tabName = "about",
                         h2("About"),
                         fluidRow(width = 12,
-                                 p("This site plots your fuel efficiency and distance travelled.  Currently it requires a file to be uploaded with a specific format output by a GoogleSheet.  In time this site will be updated to allow you to use the form yourself to collect data and then upload it directly here (I hope).  For now a sample file should have been shared with you to have a go with.")
+                                 p("This site plots your fuel efficiency and distance travelled.  Currently it requires a file to be uploaded with a specific format output by a GoogleSheet.  In time this site will be updated to allow you to use the form yourself to collect data and then upload it directly here (I hope).  For now a sample file should have been shared with you to have a go with."),
+                                 h3("Usage"),
+                                 p("Use the box on the left to upload the file that has been shared with you, then use the tabs on the left to select which graph you wish to view.")
                         )),
                 tabItem(tabName = "data",
                         h2("Data"),

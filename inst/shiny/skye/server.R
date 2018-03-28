@@ -8,11 +8,11 @@ server <- function(input, output, session){
         }
         df %>%
             leaflet() ## %>%
-            ## addProviderTiles(providers$OpenStreetMap,
-            ##                  options = providerTileOptions(noWrap = TRUE)) %>%
-            ## addCircleMarkers(radius      = 2,
-            ##                  color       = "navy",
-            ##                  fillOpacity = 0.2,
-            ##                  popup       = ~htmlEscape(ele))
+            addProviderTiles(providers$OpenStreetMap,
+                             options = providerTileOptions(noWrap = TRUE)) %>%
+            addCircleMarkers(radius      = 2,
+                             color       = "navy",
+                             fillOpacity = 0.2,
+                             popup       = ~htmlEscape(ele))
     })
 }

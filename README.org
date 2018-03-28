@@ -6,3 +6,7 @@ Personal R package with various functions I've written.
 - cd() - Wrapper for setwd() as I'm lazy.
 - pwd() - Wrapper for getwd() as I'm lazy.
 - mpg() - Summarises and plots my fuel consumption data.
+
+# Shiny Apps
+
+The package includes some Shiny applications, one for working out fuel efficiency (`mpg`) and one showing walks on The Cullin Ridge (`skye`).

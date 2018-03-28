@@ -46,3 +46,37 @@ dplyr::filter(ukc_logbook, route == 'Angle Rib') %>%
 
 dplyr::filter(ukc_logbook, grade_ == '6c+ 2') %>%
     dplyr::select(route, grade, grade_, date)
+
+## Read in GPX files and append
+t <- 1
+files <- list.files(path = "skye/gpx/", pattern = ".gpx")
+for(file in files){
+    hill <- gsub("\\.gpx", "", file)
+    read_file <- paste0("skye/gpx/", file)
+    if(t == 1){
+        skye_cullins_gpx <- readGPS(i = "gpx", f = read_file)
+        if(ncol(skye_cullins_gpx) == 28){
+            skye_cullins_gpx <- skye_cullins_gpx %>%
+                        dplyr::select(-V3, -V5)
+            names(skye_cullins_gpx) <- c(paste0("V", seq(1:26)))
+        }
+        skye_cullins_gpx$hill <- hill
+    }
+    else{
+        temp <- readGPS(i = "gpx", f = read_file)
+        if(ncol(temp) == 28){
+            temp <- temp %>%
+                    dplyr::select(-V3, -V5)
+            names(temp) <- c(paste0("V", seq(1:26)))
+        }
+        temp$hill <-  hill
+        skye_cullins_gpx <- rbind(skye_cullins_gpx,
+                          temp)
+    }
+    t <- t + 1
+}
+skye_cullins_gpx <- skye_cullins_gpx %>%
+            dplyr::select(V5, V6, V16, hill)
+names(skye_cullins_gpx) <- c("lat", "lon", "ele", "hill")
+save(skye_cullins_gpx,
+     file = "../data/skye_cullins_gpx.Rda")

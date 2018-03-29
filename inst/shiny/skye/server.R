@@ -3,11 +3,12 @@ server <- function(input, output, session){
     ## Raw Leaflet Map
     output$hill_leaflet <- renderLeaflet({
         ## Subset the data based on user specified selection
-        if(input$hill != "All"){
-            df <- dplyr::filter(skye_cullin_gpx, hill == input$hill)
+        if(input$hill != "all"){
+            df <- dplyr::filter(skye_cullins_gpx, hill == input$hill)
         }
-        df %>%
-            leaflet() ## %>%
+        ## df %>%
+        skye_cullins_gpx %>%
+            leaflet() %>%
             addProviderTiles(providers$OpenStreetMap,
                              options = providerTileOptions(noWrap = TRUE)) %>%
             addCircleMarkers(radius      = 2,

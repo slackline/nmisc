@@ -4,7 +4,7 @@ Version: 0.20180509
 Authors@R: person("Neil", "Shephard", email = "nshephard@gmail.com", role = c("aut", "cre"))
 Description: Personal helper functions
 Depends:
-    R (>= 3.5.0),
+    R (>= 3.4.4),
     devtools (>= 1.9.1),
     googlesheets (>= 0.1.0),
     ggthemes (>= 3.0.1),

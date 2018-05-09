@@ -2,14 +2,22 @@
 #'
 #' @title System hostname
 #'
-#' @param id Your Google ID.
-#' @param passwd Your Google Password.
-#' @param mpg.doc Name of your Google Sheet holding data.
-#' @param mpg.sheet Name of worksheet within Google Sheet holding data.
-#' @param zoneinfo Your timezone.
+#' @description \code{hostname} is a simple wrapper to return the systems hostname.
+#'
+#' @param shell Logical, whether to query the shell variable \code{$HOSTNAME} to obtain the hostname.
+#' @param uname Logical, whether to use \code{uname -a} to obtain the hostname.  This takes precedence over \code{shell = TRUE}.
 #'
 #' @export
-hostname <- function(){
-    hostname <- system("uname -n", intern = TRUE)
+hostname <- function(shell = FALSE,
+                     uname = TRUE){
+    if(uname == TRUE){
+        hostname <- system("uname -n", intern = TRUE)
+    }
+    else if(shell == TRUE){
+        hostname <- system("echo $HOSTNAME", intern = TRUE)
+    }
+    else{
+        print("Error : You must specify either 'uname = TRUE' (default) or 'shell = TRUE'.")
+    }
     return(hostname)
 }
